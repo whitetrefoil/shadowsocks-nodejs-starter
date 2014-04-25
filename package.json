@@ -1,28 +1,29 @@
 {
-    "name":            "shadowsocks-node-wrapper",
+    "name":            "shadowsocks-node-starter",
     "version":         "0.0.1",
     "author":          "WhiteTrefoil <whitetrefoil@gmail.com>",
-    "description":     "a wrapper of shadowsocks-nodejs, for practice purpose",
+    "description":     "a starter of shadowsocks-nodejs, for practice purpose",
     "bin":             {
-        "ss": "./bin/sswrapper"
+        "ss": "./bin/ss-start"
     },
     "scripts":         {
         "test": "cake test"
     },
-    "main":            "./lib/shadowsocks-nodejs-wrapper",
+    "main":            "./lib/starter",
     "repository":      {
         "type": "git",
-        "url":  "https://github.com/whitetrefoil/shadowsocks-nodejs-wrapper.git"
+        "url":  "https://github.com/whitetrefoil/shadowsocks-nodejs-starter.git"
     },
     "keywords":        [
-        "shadowsocks", "socks", "proxy", "wrapper"
+        "shadowsocks", "socks", "proxy", "starter", "loader", "daemon", "pid"
     ],
     "dependencies":    {
         "shadowsocks": "~ 1.4.12",
+        "lodash":      "~ 2.4",
         "wrench":      "~ 1.5",
         "glob":        "~ 3.2",
         "colors":      "~ 0.6",
-        "argv":        "~ 0.0.2"
+        "yargs":       "~ 1.2"
     },
     "devDependencies": {
         "coffee-script": "~ 1.7"
