@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>argv.litcoffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>argv.litcoffee</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="argv.html">
+                    argv.litcoffee
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="starter.html">
+                    starter.litcoffee
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>This is a internal lib file.  It will be included at the head of <a href="starter.html">starter.coffee</a>.</p>
+<h2 id="code">Code</h2>
+<p>Use <a href="https://github.com/chevex/yargs">Yargs</a> to build the argv function and help display.</p>
+
+        
+          <div class='highlight'><pre>yargs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'yargs'</span>)
+.usage <span class="hljs-string">'Usage: ss-start [--options] [-- shadowsocks_arguments]'</span>
+.example <span class="hljs-string">'daemon server with ssserver options:'</span>, <span class="hljs-string">'ss-start -Sd -- -c ~/ssserver.json'</span></pre></div>
+        
+      
+        
+        <p>Specify to run the server.
+If this argument isn’t given, will run the local service by default.</p>
+
+        
+          <div class='highlight'><pre>.alias <span class="hljs-string">'S'</span>, <span class="hljs-string">'server'</span>
+.describe <span class="hljs-string">'S'</span>, <span class="hljs-string">'start "ssserver", default is "sslocal"'</span>
+.boolean <span class="hljs-string">'S'</span></pre></div>
+        
+      
+        
+        <p>If neither of <code>--stop</code> &amp; <code>--restart</code> is given, the starter will have <strong>NO</strong> privilege to stop a running service.
+As a result, if it detects there’s already a server running, it will just quit.</p>
+<p>if <code>--stop</code> is given, the starter will only stop the service, but won’t start it again.
+if <code>--restart</code> is given, it will stop then start the service.
+Even if the service is not running actually, it will still start the service.</p>
+<p>Both <code>--stop</code> &amp; <code>--restart</code> internally rely on the PID file, and should only affect the daemon services usually.
+If no <code>--pid=</code> given, these arguments will use the default ones.</p>
+
+        
+          <div class='highlight'><pre>.alias <span class="hljs-string">'s'</span>, <span class="hljs-string">'stop'</span>
+.describe <span class="hljs-string">'s'</span>, <span class="hljs-string">'stop a running daemon server/client'</span>
+.boolean <span class="hljs-string">'s'</span>
+
+.alias <span class="hljs-string">'r'</span>, <span class="hljs-string">'restart'</span>
+.describe <span class="hljs-string">'r'</span>, <span class="hljs-string">'restart the running daemon server/client\n
+              or start a new one (if not running yet)'</span>
+.boolean <span class="hljs-string">'r'</span></pre></div>
+        
+      
+        
+        <p>Run the shadowsocks (server or local) as a daemon service.
+This will cause a PID file to be created,
+because it’s the only way for the starter to operate them later.</p>
+<p>The <code>--pid=</code> argument is <strong>not</strong> required.
+If not given, the starter will use the current working directory (<code>process.cwd</code>),
+and save the PID files according to which shadowsocks services is used.
+<code>sslocal.pid</code> or <code>ssserver.pid</code>.</p>
+<p>If you really don’t want a PID file, give a <code>--no-pid</code>.
+But if you do that, the starter has no way to stop / restart the service later.
+Use your OS’s process manager to do that.</p>
+
+        
+          <div class='highlight'><pre>.alias <span class="hljs-string">'d'</span>, <span class="hljs-string">'daemon'</span>
+.describe <span class="hljs-string">'d'</span>, <span class="hljs-string">'start the server/client as a daemon'</span>
+.boolean <span class="hljs-string">'d'</span>
+
+.alias <span class="hljs-string">'p'</span>, <span class="hljs-string">'pid'</span>
+.describe <span class="hljs-string">'p'</span>, <span class="hljs-string">'specify the path of .pid file\n
+                this is default when run w/ --daemon\n
+                if no path is given, put under the cwd\n
+                and name "sslocal.pid" or "ssserver.pid"'</span>
+.string <span class="hljs-string">'p'</span>
+
+.alias <span class="hljs-string">'P'</span>, <span class="hljs-string">'no-pid'</span>
+.describe <span class="hljs-string">'P'</span>, <span class="hljs-string">'don\'t create a .pid file\n
+                This is default when run w/o --daemon'</span>
+.boolean <span class="hljs-string">'P'</span></pre></div>
+        
+      
+        
+        <p>Print the help text.
+<a href="https://github.com/chevex/yargs">Yargs</a> didn’t</p>
+
+        
+          <div class='highlight'><pre>.alias <span class="hljs-string">'h'</span>, <span class="hljs-string">'help'</span>
+.describe <span class="hljs-string">'h'</span>, <span class="hljs-string">'print this help message'</span>
+.boolean <span class="hljs-string">'h'</span></pre></div>
+        
+      
+        
+        <p>Change a new line at the 80th character.</p>
+
+        
+          <div class='highlight'><pre>.wrap <span class="hljs-number">80</span></pre></div>
+        
+      
+        
+        <p>Exports the whole yargs instance.</p>
+<p>As a result, all properties &amp; results of that are available.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = yargs</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

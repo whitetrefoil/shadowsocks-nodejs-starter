@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>starter.litcoffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>starter.litcoffee</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="argv.html">
+                    argv.litcoffee
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="starter.html">
+                    starter.litcoffee
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>This file is the main file of the starter.</p>
+<p>Let’s think about what do we need, step by step.</p>
+<h2 id="entry-point">Entry Point</h2>
+
+        
+      
+        
+        <p>First we need a main entry point.
+There shouldn’t have many things to do in the entry point.
+Just get the configuration, then invoke the core function accordingly.</p>
+<p>If neither start nor stop is allowed, print a help text instead.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">main</span> = -&gt;</span>
+  configs = getConfigs()
+  binName = <span class="hljs-keyword">if</span> configs.server <span class="hljs-keyword">then</span> <span class="hljs-string">'ssserver'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">'sslocal'</span>
+  <span class="hljs-keyword">if</span> configs.help
+    printHelp()
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> configs.stop
+    stopService binName, configs.pid
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> configs.start
+    startService binName, configs.pid, configs.daemon
+  <span class="hljs-keyword">else</span>
+    printHelp()</pre></div>
+        
+      
+        
+        <h2 id="core-functions">Core Functions</h2>
+
+        
+      
+        
+        <p>Stop the running service.
+Since the only to find any running ones is look by PID,
+so if the PID file is unreadable,
+it will be skipped directly.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">stopService</span> = <span class="hljs-params">(binName, pidFile)</span> -&gt;</span>
+  pidFile = <span class="hljs-string">"./<span class="hljs-subst">#{binName}</span>.pid"</span> <span class="hljs-keyword">unless</span> pidFile?
+  <span class="hljs-keyword">try</span>
+    pid = fs.readFileSync pidFile,
+      <span class="hljs-attribute">encoding</span>: <span class="hljs-string">'utf8'</span>
+  <span class="hljs-keyword">catch</span> e
+    <span class="hljs-keyword">if</span> e.code <span class="hljs-keyword">is</span> <span class="hljs-string">'ENOENT'</span>
+      <span class="hljs-built_in">console</span>.warn <span class="hljs-string">"PID file <span class="hljs-subst">#{pidFile}</span> not found, skip stopping!"</span>.yellow
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">throw</span> e
+  <span class="hljs-built_in">console</span>.log <span class="hljs-string">'killed!'</span>.green</pre></div>
+        
+      
+        
+        <p>Start a new service.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">startService</span> = <span class="hljs-params">(binName, pidFile, isDaemon)</span> -&gt;</span></pre></div>
+        
+      
+        
+        <h2 id="helpers">Helpers</h2>
+
+        
+      
+        
+        <p>We need to let the end user know about how to use our application.
+Printing a <code>--help</code> text is necessary.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">printHelp</span> = -&gt;</span>
+  yargs.showHelp()</pre></div>
+        
+      
+        
+        <h2 id="initialize-configuration">Initialize &amp; Configuration</h2>
+
+        
+      
+        
+        <p>Not many things need to configure.
+Just get a map of arguments is enough.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">getConfigs</span> = -&gt;</span>
+  argv = yargs.argv
+  <span class="hljs-attribute">server</span>: argv.server
+  <span class="hljs-attribute">stop</span>: argv.stop <span class="hljs-keyword">or</span> argv.restart
+  <span class="hljs-attribute">start</span>: !argv.stop <span class="hljs-keyword">or</span> argv.restart
+  <span class="hljs-attribute">daemon</span>: argv.daemon
+  <span class="hljs-attribute">pid</span>: <span class="hljs-keyword">if</span> argv.noPid <span class="hljs-keyword">is</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">then</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">else</span> argv.pid
+  <span class="hljs-attribute">help</span>: argv.help</pre></div>
+        
+      
+        
+        <h2 id="dependencies">Dependencies</h2>
+
+        
+      
+        
+        <p>One more important thing to do - check which libraries have we used</p>
+<p>Firstly get the arguments from <a href="argv.html">argv.litcoffee</a></p>
+
+        
+          <div class='highlight'><pre>yargs = <span class="hljs-built_in">require</span> <span class="hljs-string">'./argv'</span></pre></div>
+        
+      
+        
+        <p>Then there are some external dependencies…</p>
+
+        
+          <div class='highlight'><pre>_ = <span class="hljs-built_in">require</span> <span class="hljs-string">'lodash'</span>
+util = <span class="hljs-built_in">require</span> <span class="hljs-string">'util'</span>
+colors = <span class="hljs-built_in">require</span> <span class="hljs-string">'colors'</span>
+fs = <span class="hljs-built_in">require</span> <span class="hljs-string">'fs'</span></pre></div>
+        
+      
+        
+        <h2 id="public-api">Public API</h2>
+
+        
+      
+        
+        <p>Now we can publish the main entry point.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = main</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

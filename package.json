@@ -26,7 +26,8 @@
         "yargs":       "~ 1.2"
     },
     "devDependencies": {
-        "coffee-script": "~ 1.7"
+        "coffee-script": "~ 1.7",
+        "docco":         "~ 0.6"
     },
     "license":         "MIT",
     "engines":         {
